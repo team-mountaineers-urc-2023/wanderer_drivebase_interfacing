@@ -1,0 +1,25 @@
+<launch>
+	<arg name="cmd_vel_topic" default="/cmd_vel"/>
+	<arg name="timeout" value="0.5"/>
+	<arg name="min_linear_speed" default="-2"/>
+	<arg name="max_linear_speed" default="2"/>
+	<arg name="min_angular_speed" default="-2"/>
+	<arg name="max_angular_speed" default="2"/>
+
+	<!-- launch skid steer drivebase interfacing (translates cmd_vel to motor_cmd) -->
+	<include file="$(find skid_steer_drivebase)/launch/skid_steer_drivebase.launch">
+		<arg name="motor_cmd_topic" value="/motor_cmd"/>
+		<arg name="cmd_vel_topic" value="$(arg cmd_vel_topic)"/>
+		<arg name="timeout" value="$(arg timeout)"/>
+		<arg name="min_linear_speed" value="$(arg min_linear_speed)"/>
+		<arg name="max_linear_speed" value="$(arg max_linear_speed)"/>
+		<arg name="min_angular_speed" value="$(arg min_angular_speed)"/>
+		<arg name="max_angular_speed" value="$(arg max_angular_speed)"/>
+	</include>
+
+	<!-- launch the motor control code -->
+	<include file="$(find wanderer_drivebase_interfacing)/launch/drivetrain_motors.launch">
+		<arg name="motor_cmd_topic" value="/motor_cmd"/>
+		<arg name="timeout" value="$(arg timeout)"/>
+	</include>
+</launch>

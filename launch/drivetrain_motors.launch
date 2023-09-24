@@ -1,0 +1,55 @@
+<launch>
+	<arg name="name" default="drivetrain_motors"/> 
+	<arg name="motor_cmd_topic" default="/motor_cmd"/>
+
+	<arg name="motor_left_index" default="0"/> <!--Index in the command message of the speed for the left motors-->
+	<arg name="motor_right_index" default="1"/> <!--Index in the command message of the speed for the right motors-->
+	<arg name="ccw_fwd" default="False"/> <!--Is CCW direction forward?-->
+	<arg name="timeout" default="0.5"/> <!--How long to wait since recieving the last message to send a stop command to the motors-->
+	<!-- <arg name="message_period_ms" default="250"/>  Not used I think-->
+
+	<!-- Added CAN IDs and motor types to create MyActuatorMotor object	-->
+	<!-- Set motor IDs for each wheels motor -->
+	<!-- <arg name="motor_LF_ID" value="0x01"/>	
+	<arg name="motor_LB_ID" value="0x04"/>
+	<arg name="motor_RF_ID" value="0x02"/>
+	<arg name="motor_RB_ID" value="0x03"/> -->
+	<arg name="motor_LF_ID" value="0x141"/>	
+	<arg name="motor_LB_ID" value="0x144"/>
+	<arg name="motor_RF_ID" value="0x142"/>
+	<arg name="motor_RB_ID" value="0x143"/>
+
+	<arg name="motor_type_1" value="X6_S2_V2_1"/>	<!-- We have two different revisions of motor smh-->
+	<arg name="motor_type_2" value="X6_S2_V2_2"/>	
+
+	<arg name="motor_LF_port" value="/dev/urc/mtc/LF"/>	
+	<arg name="motor_LB_port" value="/dev/urc/mtc/LB"/>
+	<arg name="motor_RF_port" value="/dev/urc/mtc/RF"/>
+	<arg name="motor_RB_port" value="/dev/urc/mtc/RB"/>
+
+	<node pkg="wanderer_drivebase_interfacing" name="$(arg name)" type="drivetrain_motors.py" output="screen" respawn="false">
+		<param name="name" value="$(arg name)"/>
+		<param name="motor_cmd_topic" value="$(arg motor_cmd_topic)"/>
+		<param name="motor_left_index" value="$(arg motor_left_index)"/>
+		<param name="motor_right_index" value="$(arg motor_right_index)"/>
+		<param name="ccw_fwd" value="$(arg ccw_fwd)"/>
+		<param name="timeout" value="$(arg timeout)"/>
+		<!-- <param name="message_period_ms" value="$(arg message_period_ms)"/> Not used I think -->
+		
+		<!-- Added modifiable CAN IDs and motor types -->		
+		<param name="motor_LF_ID" value="$(arg motor_LF_ID)"/>
+		<param name="motor_LB_ID" value="$(arg motor_LB_ID)"/>
+		<param name="motor_RF_ID" value="$(arg motor_RF_ID)"/>
+		<param name="motor_RB_ID" value="$(arg motor_RB_ID)"/>
+		<param name="motor_type_1" value="$(arg motor_type_1)"/>
+		<param name="motor_type_2" value="$(arg motor_type_2)"/>	
+
+		<param name="motor_LF_port" value="$(arg motor_LF_port)"/>	
+		<param name="motor_LB_port" value="$(arg motor_LB_port)"/>
+		<param name="motor_RF_port" value="$(arg motor_RF_port)"/>
+		<param name="motor_RB_port" value="$(arg motor_RB_port)"/>
+
+		<!-- Grab the motor params from the config file to set -->
+		<rosparam file="$(find myactuator_control)/config/X6_S2_config.yaml"/>
+	</node>
+</launch>
